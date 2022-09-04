@@ -2,6 +2,11 @@ RTL8188FU driver for Linux kernel 4.15.x ~ 6.7.x (Linux Mint, Ubuntu or Debian D
 
 info: rtl8188fu support will be add to rtl8xxxu module of Linux kernel. https://patchwork.kernel.org/project/linux-wireless/patch/b14f299d-3248-98fe-eee1-ba50d2e76c74@gmail.com/
 
+## Fork info
+What I have done:
+ - Allow building on arm64
+ - Avoid flooding dmesg
+ - Allow power mgmt
 
 ------------------
 
@@ -18,16 +23,6 @@ info: rtl8188fu support will be add to rtl8xxxu module of Linux kernel. https://
 ------------------
 
 ## Configuration
-
-#### Disable Power Management
-
-Run following commands for disable power management and plugging/replugging issues.
-
-`sudo mkdir -p /etc/modprobe.d/`
-
-`sudo touch /etc/modprobe.d/rtl8188fu.conf`
-
-`echo "options rtl8188fu rtw_power_mgnt=0 rtw_enusbss=0 rtw_ips_mode=0" | sudo tee /etc/modprobe.d/rtl8188fu.conf`
 
 #### Disable MAC Address Spoofing
 

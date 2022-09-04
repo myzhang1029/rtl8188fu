@@ -898,10 +898,7 @@ PHY_GetTxPowerIndex_8188F(
 
 	txPower += PHY_GetTxPowerTrackingOffset(pAdapter, RFPath, Rate);
 
-	if (txPower > MAX_POWER_INDEX)
-		txPower = MAX_POWER_INDEX;
-
-	/*DBG_871X("Final Tx Power(RF-%c, Channel: %d) = %d(0x%X)\n", ((RFPath==0)?'A':'B'), Channel, txPower, txPower)); */
+	DBG_871X("Final Tx Power(RF-%c, Channel: %d) = %d(0x%X)\n", ((RFPath==0)?'A':'B'), Channel, txPower, txPower);
 	return (u8) txPower;
 }
 
@@ -938,6 +935,8 @@ PHY_GetTxPowerLevel8188F(
 )
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
+    *powerlevel = pHalData->CurrentTxPwrIdx;
+#if 0
 	s32				TxPwrDbm = 13;
 #if 0
 	RT_TRACE(COMP_TXAGC, DBG_LOUD, ("PHY_GetTxPowerLevel8188F(): TxPowerLevel: %#x\n", TxPwrDbm));
@@ -946,6 +945,7 @@ PHY_GetTxPowerLevel8188F(
 		*powerlevel = pMgntInfo->ClientConfigPwrInDbm;
 	else
 		*powerlevel = TxPwrDbm;
+#endif
 #endif
 }
 
