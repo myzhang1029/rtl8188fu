@@ -5743,11 +5743,6 @@ static void cfg80211_rtw_mgmt_frame_register(struct wiphy *wiphy,
 #endif
 	_adapter *adapter;
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0))
-	u16 frame_type = BIT(upd->global_stypes << 4);
-	bool reg = false;
-#endif
-
 	struct rtw_wdev_priv *pwdev_priv;
 
 	if (ndev == NULL)
@@ -5757,13 +5752,25 @@ static void cfg80211_rtw_mgmt_frame_register(struct wiphy *wiphy,
 	pwdev_priv = adapter_wdev_data(adapter);
 
 #ifdef CONFIG_DEBUG_CFG80211
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0))
+	DBG_871X(FUNC_ADPT_FMT" global_stypes:%x, interface_stypes:%x\n", FUNC_ADPT_ARG(adapter),
+		upd->global_stypes, upd->interface_stypes);
+#else
 	DBG_871X(FUNC_ADPT_FMT" frame_type:%x, reg:%d\n", FUNC_ADPT_ARG(adapter),
 		frame_type, reg);
+#endif
 #endif
 
 	/* Wait QC Verify */
 	return;
 
+    /* Well this is dead code anyways? What is the point of this function? @Realtek */
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0))
+    if (upd->global_stypes & BIT(IEEE80211_STYPE_PROBE_REQ >> 4))
+		SET_CFG80211_REPORT_MGMT(pwdev_priv, IEEE80211_STYPE_PROBE_REQ, false);
+    else if (upd->global_stypes & BIT(IEEE80211_STYPE_ACTION >> 4))
+		SET_CFG80211_REPORT_MGMT(pwdev_priv, IEEE80211_STYPE_ACTION, false);
+#else
 	switch (frame_type) {
 	case IEEE80211_STYPE_PROBE_REQ: /* 0x0040 */
 		SET_CFG80211_REPORT_MGMT(pwdev_priv, IEEE80211_STYPE_PROBE_REQ, reg);
@@ -5774,6 +5781,7 @@ static void cfg80211_rtw_mgmt_frame_register(struct wiphy *wiphy,
 	default:
 		break;
 	}
+#endif
 
 exit:
 	return;
